@@ -1,3 +1,5 @@
+from pyspark.sql.types import StructField, StructType, StringType, DoubleType, LongType
+import yaml
 
 def import_query(path):
     """_summary__
@@ -28,4 +30,5 @@ def check_tables(spark, catalog, database, table):
     """
     query = f"SHOW TABLES IN {catalog}.{database} LIKE '{table}'"
     result = spark.sql(query).count()
-    return result > 0
+    return result == 1
+
