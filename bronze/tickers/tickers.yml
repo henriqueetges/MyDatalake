@@ -1,0 +1,139 @@
+schema:
+  - name: 'currency'
+    type: 'string'
+    nullable: false
+  
+  - name: 'marketCap'
+    type: 'string'
+    nullable: false
+  
+  - name: 'shortName'
+    type: 'string'
+    nullable: false
+
+  - name: 'longName'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketChange'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketChangePercent'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketTime'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketPrice'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketDayHigh'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketDayRange'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketDayLow'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketVolume'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketPreviousClose'
+    type: 'string'
+    nullable: false
+  
+  - name: 'regularMarketOpen'
+    type: 'string'
+    nullable: false
+  
+  - name: 'fiftyTwoWeekRange'
+    type: 'string'
+    nullable: false
+  
+  - name: 'fiftyTwoWeekLow'
+    type: 'string'
+    nullable: false
+
+  - name: 'fiftyTwoWeekHigh'
+    type: 'string'
+    nullable: false
+
+  - name: 'symbol'
+    type: 'string'
+    nullable: false
+  
+  - name: 'logourl'
+    type: 'string'
+    nullable: false
+
+  - name: 'historicalDataPrice'
+    type: 'array'
+    nullable: false
+    element_type:
+      type: 'struct'
+      fields: 
+        - name: 'date'
+          type: 'string'
+        - name: 'open'
+          type: 'string'
+        - name: 'high'
+          type: 'string'
+        - name: 'low'
+          type: 'string'
+        - name: 'close'
+          type: 'string'
+        - name: 'volume'
+          type: 'string'
+        - name: 'adjustedClose'
+          type: 'string'
+
+  - name: 'summaryProfile'
+    type: 'struct'
+    nullable: false
+    fields:
+      - name: 'address1'
+        type: 'string'
+      - name: 'address2'
+        type: 'string'
+      - name: 'city'
+        type: 'string'
+      - name: 'state'
+        type: 'string'
+      - name: 'zip'
+        type: 'string'
+      - name: 'country'
+        type: 'string'
+      - name: 'industry'
+        type: 'string'
+      - name: 'industryKey'
+        type: 'string'
+      - name: 'industryDisp'
+        type: 'string'
+      - name: 'sector'
+        type: 'string'
+      - name: 'sectorKey'
+        type: 'string'
+      - name: 'sectorDisp'
+        type: 'string'
+      - name: 'longBusinessSummary'
+        type: 'string'
+      - name: 'companyOfficers'
+        type: 'array'
+      - name: 'executiveTeam'
+        type: 'array'  
+  - name: 'priceEarnings'
+    type: 'string'
+    nullable: false
+
+  - name: 'earningsPerShare'
+    type: 'string'
+    nullable: false
