@@ -1,0 +1,32 @@
+schema:
+  - name: 'stocks'
+    type: 'string'
+    nullable: false
+  
+  - name: 'close'
+    type: 'string'
+    nullable: false
+
+  - name: 'change'
+    type: 'string'
+    nullable: false
+
+  - name: 'volume'
+    type: 'string'
+    nullable: false
+
+  - name: 'market_cap'
+    type: 'string'
+    nullable: false
+  
+  - name: 'logo'
+    type: 'string'
+    nullable: false
+
+  - name: 'asset_type'
+    type: 'string'
+    nullable: false
+  
+  - name: 'loaded_at'
+    type: 'string'
+    nullable: false
