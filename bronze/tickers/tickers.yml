@@ -30,6 +30,7 @@ schema:
   - name: 'regularMarketPrice'
     type: 'string'
     nullable: false
+    date_predicate: true
   
   - name: 'regularMarketDayHigh'
     type: 'string'
@@ -70,6 +71,7 @@ schema:
   - name: 'symbol'
     type: 'string'
     nullable: false
+    key: true
   
   - name: 'logourl'
     type: 'string'

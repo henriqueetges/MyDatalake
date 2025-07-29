@@ -14,6 +14,28 @@ class Ingestor:
         self.path = f'/Volumes/raw/{schema}/{table_name}'
         self.query_path = f'./{table_name}/{table_name}.sql'
     
+    def _open_query(self):
+        try:
+            with open(self.query_path, 'r') as f:
+                query = f.read()
+            return query
+        except Exception as e:
+            print(f'Error opening query file: {e}')
+
+
+    def _open_yml(self):
+        try:
+            with open(f'{self.table_name}/{self.table_name}.yml', 'r') as f:
+                schema_yml = yaml.safe_load(f)
+                return schema_yml
+        except Exception as e:
+            print(f'Error opening yml file: {e}')
+    
+    def _set_fields(self):
+        schema_yml = self._open_yml().get('schema', [])
+        self.id_field = [f['name'] for f in schema_yml if f.get('key') == True][0]
+        self.ts_field = [f['name'] for f in schema_yml if f.get('date_predicate') == True][0]
+        return self.id_field, self.ts_field
 
     def _set_schema(self):
         def parse_field(field_def):
@@ -41,46 +63,55 @@ class Ingestor:
                     'timestamp': TimestampType()
                 }
                 return StructField(field_def['name'], type_map[type_name], nullable)
-
-        with open(f'{self.table_name}/{self.table_name}.yml', 'r') as f:
-            schema_yml = yaml.safe_load(f)
+                    
+        schema_yml = self._open_yml()
+        try:
             fields = [parse_field(field) for field in schema_yml['schema'] if 'name' in field]
-
-        self.table_schema = StructType(fields)
-        return self.table_schema
-
-
+            self.table_schema = StructType(fields)
+        except Exception as e:
+            print(f'Error setting schema: {e}')
+                
     def load(self):
         self._set_schema()
-        df = self.spark.read.format(self.input_format).schema(self.table_schema).load(f'{self.path}/*.json')
-        df.createOrReplaceTempView(f'view_{self.table_name}')
-        return f'view_{self.table_name}'
+        try:
+            df = self.spark.read.format(self.input_format).schema(self.table_schema).load(f'{self.path}/*.json')
+            df.createOrReplaceTempView(f'view_{self.table_name}')
+            return f'view_{self.table_name}'
+        except Exception as e:
+            print(f'Error loading data: {e}')
 
     def transform(self):
-        with open(self.query_path, 'r') as f:
-            query = f.read()
-        df = self.spark.sql(query)
-        return df
+        try:
+            query = self._open_query()
+            df = self.spark.sql(query)
+            return df
+        except Exception as e:
+            print(f'Error transforming {self.table_name}: {e}')
     
     def save(self, df):
-        (df.write
-            .format('delta')
-            .mode('overwrite')
-            .saveAsTable(f'{self.catalog}.{self.schema}.{self.table_name}')
+        try:
+            (df.write
+                .format('delta')
+                .mode('overwrite')
+                .saveAsTable(f'{self.catalog}.{self.schema}.{self.table_name}')
             )
+        except Exception as e:
+            print(f'Error saving {self.table_name}: {e}')
         return True
     
     def run(self):
+        print(f'Loading {self.table_name}')
         df = self.load()
+        print(f'Transforming {self.table_name} ')
         transformed_df = self.transform()
+        print(f'Saving {self.table_name} into {self.catalog}.{self.schema}.{self.table_name}')
         return self.save(transformed_df)
 
 class IngestorCDC(Ingestor):
-    def __init__(self, spark, catalog, schema, table_name, input_format, id_field, ts_field):
+    def __init__(self, spark, catalog, schema, table_name, input_format):
         super().__init__(spark, catalog, schema, table_name, input_format)
-        self.id_field = id_field
-        self.ts_field = ts_field
         self._set_delta()
+        self._set_fields()
 
     def _set_delta(self):
         table = f'{self.catalog}.{self.schema}.{self.table_name}'
@@ -88,17 +119,16 @@ class IngestorCDC(Ingestor):
     
     def upsert(self, df):
         df.createOrReplaceTempView (f'view_{self.table_name}')
-        query = f'''
-            SELECT * FROM view_{self.table_name}
-            QUALIFY ROW_NUMBER() OVER (PARTITION BY {self.id_field} ORDER BY {self.ts_field} DESC) = 1
-            '''
-        df = self.spark.sql(query)
-
-        (self.delta_table.alias('old')
-            .merge(df.alias('new'), f'old.{self.id_field} = new.{self.id_field} and new.{self.ts_field} = old.{self.ts_field}')
-            .whenMatchedUpdateAll()
-            .whenNotMatchedInsertAll()
-            .execute())
+        query = self._open_query() + f'QUALIFY ROW_NUMBER() OVER (PARTITION BY {self.id_field} ORDER BY {self.ts_field} DESC) = 1'
+        try:
+            df = self.spark.sql(query)
+            (self.delta_table.alias('old')
+                .merge(df.alias('new'), f'old.{self.id_field} = new.{self.id_field} and new.{self.ts_field} = old.{self.ts_field}')
+                .whenMatchedUpdateAll()
+                .whenNotMatchedInsertAll()
+                .execute())
+        except Exception as e:
+            print(f'Error upserting {self.table_name}: {e}')
     
     def load(self):
         self._set_schema()
@@ -106,8 +136,11 @@ class IngestorCDC(Ingestor):
         return df
 
     def run(self):
+        print(f'Loading {self.table_name}')
         df = self.load()
+        print(f'Upserting {self.table_name}')
         self.upsert(df)
+        print(f'Finished')
         return True
 
 
