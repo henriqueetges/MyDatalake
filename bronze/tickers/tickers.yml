@@ -139,3 +139,7 @@ schema:
   - name: 'earningsPerShare'
     type: 'string'
     nullable: false
+    
+  - name: 'loaded_at'
+    type: 'string'
+    nullable: false

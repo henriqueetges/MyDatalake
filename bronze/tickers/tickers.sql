@@ -24,6 +24,7 @@ SELECT
   , summaryProfile
   , CAST(priceEarnings AS double) AS priceEarnings
   , CAST(earningsPerShare AS DOUBLE) AS earningsPerShare
+  , CAST(loaded_at AS timestamp) AS loaded_at
 
 
 FROM view_tickers
