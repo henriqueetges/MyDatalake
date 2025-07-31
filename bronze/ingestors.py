@@ -126,11 +126,12 @@ class IngestorCDC(Ingestor):
         query = self._open_query() + f'QUALIFY ROW_NUMBER() OVER (PARTITION BY {self.id_field} ORDER BY {self.ts_field} DESC) = 1'
         try:
             df = self.spark.sql(query)
-            (self.delta_table.alias('old')
+            merge = (self.delta_table.alias('old')
                 .merge(df.alias('new'), f'old.{self.id_field} = new.{self.id_field} and new.{self.ts_field} = old.{self.ts_field}')
                 .whenMatchedUpdateAll()
                 .whenNotMatchedInsertAll()
                 .execute())
+            merge.display()
         except Exception as e:
             print(f'Error upserting {self.output_table_name}: {e}')
     
