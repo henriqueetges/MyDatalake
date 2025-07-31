@@ -1,34 +1,26 @@
-from pyspark.sql.types import StructField, StructType, StringType, DoubleType, LongType
 import yaml
 
-def import_query(path):
-    """_summary__
-    Imports a SQL query from a file.
+def find_job(job_type, job_name):
+    file_path = './job_metadata.yml'
 
-    Args:
-        path ( String): _path to the SQL file
+    def _parse_yaml(file_path):
+        try:
+            with open(file_path, 'r') as f:
+                data = yaml.safe_load(f)
+            return data
+        except FileNotFoundError:
+            print(f"File not found: {file_path}")
 
-    Returns:
-        _type_: SQL query string
-    """
-    with open(path, "r") as file:
-        query = file.read()
-    return query
+    def _find_job(data, job_name, job_type):
+        try:
+            for job in data['jobs']:
+                if (job['name'] == job_name and job['type'] == job_type):
+                    return job
+        except KeyError as e:
+            print(f'Key not found {e}')
 
-def check_tables(spark, catalog, database, table):
-    """_summary__
-    Checks if a table exists in the specified catalog and database.
+    data = _parse_yaml(file_path)
+    return _find_job(data, job_name, job_type)
 
-    Args:
-        spark (_type_): Spark session
-        catalog (str): Catalog name
-        database (str): Database name
-        table (str): Table name
 
-    Returns:
-        _type_: Boolean value indicating if the table exists
-    """
-    query = f"SHOW TABLES IN {catalog}.{database} LIKE '{table}'"
-    result = spark.sql(query).count()
-    return result == 1
 
