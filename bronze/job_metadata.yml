@@ -14,11 +14,6 @@ jobs:
       catalog: 'bronze'
       schema: 'brapi'
     
-    - input_table_name: 'tickers'
-      output_table_name: 'prices'
-      input_format: 'json'
-      catalog: 'bronze'
-      schema: 'brapi'
 
   - name: 'bronze_cdc'
     type: 'cdc'
@@ -29,9 +24,5 @@ jobs:
         catalog: 'bronze'
         schema: 'brapi'
     
-      - input_table_name: 'tickers'
-        output_table_name: 'prices'
-        input_format: 'json'
-        catalog: 'bronze'
-        schema: 'brapi'
+
     

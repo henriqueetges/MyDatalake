@@ -1,0 +1,46 @@
+schema:
+  - name: 'symbol'
+    type: 'string'
+    nullable: false 
+    key: true
+  
+  - name: 'city'
+    type: 'string'
+    nullable: false 
+
+  - name: 'loaded_at'
+    type: 'string'
+    nullable: false
+    date_predicate: true
+  
+  - name: 'zip'
+    type: 'string'
+    nullable: false 
+  
+  - name: 'state'
+    type: 'string'
+    nullable: false 
+  
+  - name: 'industry'
+    type: 'string'
+    nullable: false 
+
+  - name: 'country'
+    type: 'string'
+    nullable: false 
+
+  - name: 'sector'
+    type: 'string'
+    nullable: false
+
+  - name: 'address'
+    type: 'string'
+    nullable: false
+
+  - name: 'address2'
+    type: 'string'
+    nullable: false
+
+  - name: 'BusinessSummary'
+    type: 'string'
+    nullable: false

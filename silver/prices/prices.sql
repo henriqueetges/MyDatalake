@@ -8,8 +8,8 @@ WITH `main` AS (
   , cast(exploded.close as float) as `close`
   , cast(exploded.volume as float) as `volume`
   , cast(exploded.adjustedClose as float) as `adjustedClose`
-  , `loaded_at` 
-  FROM  `view_prices`
+  , cast(current_timestamp() as date ) as `loaded_at` 
+  FROM  `bronze`.`brapi`.`tickers`
   LATERAL VIEW explode(`historicalDataPrice`) as exploded 
 ),
 

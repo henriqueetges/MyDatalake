@@ -1,0 +1,29 @@
+jobs:
+  - name: 'silver_full'
+    type: 'full'
+    tables: 
+    - output_table_name: 'prices'
+      input_format: 'delta'
+      catalog: 'silver'
+      schema: 'brapi'
+    
+    - output_table_name: 'summary_profile'
+      input_format: 'delta'
+      catalog: 'silver'
+      schema: 'brapi'
+
+  - name: 'silver_cdc'
+    type: 'cdc'
+    tables:
+      - output_table_name: 'prices'
+        input_format: 'delta'
+        catalog: 'silver'
+        schema: 'brapi'
+      
+      - output_table_name: 'summary_profile'
+        input_format: 'delta'
+        catalog: 'silver'
+        schema: 'brapi'
+    
+
+    
