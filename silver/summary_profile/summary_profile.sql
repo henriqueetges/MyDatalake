@@ -27,7 +27,7 @@ WITH `main` AS (
   , `address2`
   , `BusinessSummary`
   , `loaded_at`
-  , row_number() OVER (PARTITION BY `symbol` ORDER BY `loaded_at` desc) as `rank`
+  , row_number() OVER (PARTITION BY `symbol`, `loaded_at` ORDER BY `loaded_at` desc) as `rank`
   
   , current_timestamp()
 FROM `main`

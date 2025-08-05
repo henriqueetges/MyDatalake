@@ -2,27 +2,27 @@ jobs:
   - name: 'bronze_full'
     type: 'full'
     tables: 
-    - input_table_name: 'assets'
-      output_table_name: 'assets'
+    - table_name: 'assets'
       input_format: 'json'
       catalog: 'bronze'
       schema: 'brapi'
     
-    - input_table_name: 'tickers'
-      output_table_name: 'tickers'
+    - table_name: 'tickers'
       input_format: 'json'
       catalog: 'bronze'
       schema: 'brapi'
     
-
   - name: 'bronze_cdc'
     type: 'cdc'
     tables:
-      - input_table_name: 'tickers'
-        output_table_name: 'tickers'
+      - table_name: 'tickers'
         input_format: 'json'
         catalog: 'bronze'
         schema: 'brapi'
-    
+        
+      - table_name: 'assets'
+        input_format: 'json'
+        catalog: 'bronze'
+        schema: 'brapi'
 
     
