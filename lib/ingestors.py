@@ -75,8 +75,8 @@ class Ingestor:
     def load(self):
         self._set_schema()
         try:
-            if self.input_format == 'json':
-                df = self.spark.read.format(self.input_format).schema(self.table_schema).load(f'{self.path}/*.json')
+            if self.input_format in ['json', 'parquet']:
+                df = self.spark.read.format(self.input_format).schema(self.table_schema).load(f'{self.path}/*.{self.input_format}')
                 df = df.withColumn('loaded_at', current_timestamp())
                 df.createOrReplaceTempView(f'view_{self.table_name}')
             else:

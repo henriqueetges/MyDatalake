@@ -17,7 +17,7 @@ def find_job(job_type, job_name):
                 if (job['name'] == job_name and job['type'] == job_type):
                     return job
         except KeyError as e:
-            print(f'Key not found {e}')
+            print(f'Job not found {e}')
 
     data = _parse_yaml(file_path)
     return _find_job(data, job_name, job_type)
