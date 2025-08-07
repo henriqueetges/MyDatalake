@@ -2,10 +2,6 @@ schema:
   - name: 'symbol'
     type: 'string'
     nullable: false 
-  
-  - name: 'symbol'
-    type: 'string'
-    nullable: false 
     key: true
 
   - name: 'date'
