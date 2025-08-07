@@ -2,6 +2,7 @@ schema:
   - name: 'stocks'
     type: 'string'
     nullable: false
+    key: true
   
   - name: 'close'
     type: 'string'
@@ -30,3 +31,4 @@ schema:
   - name: 'loaded_at'
     type: 'string'
     nullable: false
+    date_predicate: true

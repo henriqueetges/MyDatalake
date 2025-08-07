@@ -26,11 +26,12 @@ schema:
   - name: 'regularMarketTime'
     type: 'string'
     nullable: false
+    date_predicate: true
   
   - name: 'regularMarketPrice'
     type: 'string'
     nullable: false
-    date_predicate: true
+    
   
   - name: 'regularMarketDayHigh'
     type: 'string'

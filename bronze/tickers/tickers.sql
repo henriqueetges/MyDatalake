@@ -28,3 +28,5 @@ SELECT
 
 
 FROM view_tickers
+QUALIFY row_number() over (partition by symbol order by regularMarketTime desc) = 1
+-- DBTITLE 1)

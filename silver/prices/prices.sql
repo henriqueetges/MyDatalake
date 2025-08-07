@@ -1,4 +1,4 @@
-WITH `main` AS (
+
   SELECT
  `symbol`
   , CAST(from_unixtime(cast(exploded.date as bigint)) AS DATE) as `date`
@@ -11,34 +11,5 @@ WITH `main` AS (
   , cast(current_timestamp() as date ) as `loaded_at` 
   FROM  `bronze`.`brapi`.`tickers`
   LATERAL VIEW explode(`historicalDataPrice`) as exploded 
-),
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY `symbol`, `date` ORDER BY `date` DESC) = 1
 
-`dedup` AS (
-  SELECT DISTINCT
-  `symbol`
-  , `date`
-  , `open`
-  , `high`
-  , `low`
-  , `close`
-  , `volume`
-  , `adjustedClose`
-  , `loaded_at`
- , ROW_NUMBER() OVER (PARTITION BY `symbol`, `date` ORDER BY `date` DESC) as `rank`
-FROM `main`
-)
-
-
-SELECT 
-  `symbol`
-  , `date`
-  , `open`
-  , `high`
-  , `low`
-  , `close`
-  , `volume`
-  , `adjustedClose`
-  , `loaded_at`
-
-FROM `dedup`
-where `rank` = 1 

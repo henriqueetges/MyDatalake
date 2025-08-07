@@ -116,7 +116,7 @@ class IngestorCDC(Ingestor):
     
     def upsert(self, df):
         df.createOrReplaceTempView (f'view_{self.table_name}')
-        query = self._open_query() + f'QUALIFY ROW_NUMBER() OVER (PARTITION BY {self.id_field} ORDER BY {self.ts_field} DESC) = 1'
+        query = self._open_query()
         try:
             df = self.spark.sql(query)
             merge = (self.delta_table.alias('old')
