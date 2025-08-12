@@ -103,11 +103,13 @@ class Checker:
       column_name = kwargs.get('column', '')
       test_type = kwargs.get('test_type', '')   
       mandate = kwargs.get('mandate', '')
+      test_name= kwargs.get('test_name', '')
       results = self.df.select(
         'df_key', 
         F.lit(test_type).alias('test_type'), 
         F.lit(mandate).alias('mandate'),
         F.lit(column_name).alias('column'),
+        F.lit(test_name).alias('test_name'),
         F.lit(datetime.date.today()).alias('run_date'),
         result_col.alias('check_result'),
         score.alias('check_score')
@@ -257,23 +259,6 @@ class Checker:
       self._log_step('Tests', f'Checking {column_name} for type consistency finished')
       return self._build_result(result, score,**kwargs)
 
-      
-     
-
-    # def Annotate_not_consistent_with(self, column_name: str, reference_df: SparkDataFrame,**kwargs)-> SparkDataFrame:      
-    #   for col_info in kwargs['column_names']:
-    #     column_name = col_info['name']
-    #     reference_column = col_info['reference_column']
-    #     mapped_table = col_info['mapped_table']
-    #     common_key = col_info['common_key']
-    #     self.df = self.df.alias('source')
-    #     reference_df = self.spark_session.read.parquet(mapped_table, header=True, sep=';', inferSchema=True).select(common_key, reference_column).alias('reference')
-    #     self.df = self.df.join(reference_df, on=self.df[f'source.{common_key}'] == reference_df[f'reference.{common_key}'], how="left")
-    #     self.df = (self.df.withColumn(f"{column_name}_not_consistent_with"
-    #       , F.col(f'source.{column_name}') != F.col(f'reference.{reference_column}')))
-    #     self.df = self.df.drop(f'reference.{reference_column}')
-    #   return self.df
-
     def Annotate(self) -> SparkDataFrame:
       """
       Mapping function that takes the column metadata dictionary and
@@ -291,7 +276,7 @@ class Checker:
         'not_in_list': self.Annotate_not_in_list,  
         'type_mismatch': self.Annotate_type_inconsistency,
         'pattern_mismatch':self.Annotate_pattern_inconsistency,
-        #consistency': self.Annotate_not_consistent_with,      
+        
      }
       dfs = []
       tests = self.get_column_tests()

@@ -57,7 +57,7 @@ class CheckerHandler:
       return df.select(
           F.lit(layer).alias('layer'),
           F.lit(table_name).alias('table_name'),
-          'df_key', 'test_type', 'column', 
+          'df_key', 'test_type', 'test_name', 'column', 'mandate',
           'run_date', 'check_result', 'check_score'
       )
 
@@ -89,8 +89,27 @@ class CheckerHandler:
       self._log_step("Compilation", "Compiling results")
       start = time.time()
       final_df = reduce(lambda df1, df2: df1.unionByName(df2), results)
+      final_df.createOrReplaceTempView('silver.checks.tempv_column_checks')
       self._log_duration("Compilation", start)
       return final_df
+              
+    
+    def _save_checks(self, df: SparkDataFrame):
+      self._log_step('Saving', 'Saving results')
+      try:
+        
+        df = df.withColumn("run_date", F.col("run_date").cast("date")) \
+          .withColumn("check_score", F.col("check_score").cast("double"))
+
+        (df.write
+         .mode('overwrite')
+         .option('overwriteSchema', 'true')
+         .format('delta')
+         .saveAsTable('silver.checks.column_checks')
+        )
+      except Exception as e:
+        raise RuntimeError(f"Failed to save checks: {e}")
+
 
     def run_checks(self):
       """
@@ -108,4 +127,6 @@ class CheckerHandler:
           return None
       checker_handler.removeHandler(file_handler)
       file_handler.close()
-      return self._compile_results(results)
+      results = self._compile_results(results)
+      self._save_checks(results)
+      return results

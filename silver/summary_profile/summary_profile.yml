@@ -39,7 +39,7 @@ schema:
   
   - name: 'industry'
     type: 'string'
-    mandate: 'global_required'
+    mandate: 'local_optional'
     nullable: false
     tests:
       - test_type: missing 
@@ -53,28 +53,28 @@ schema:
 
   - name: 'sector'
     type: 'string'
-    mandate: 'global_required'
+    mandate: 'local_required'
     nullable: false
     tests:
       - test_type: missing 
 
   - name: 'address1'
     type: 'string'
-    mandate: 'global_required'
+    mandate: 'local_optional'
     nullable: false
     tests:
       - test_type: missing 
 
   - name: 'address2'
     type: 'string'
-    mandate: 'global_required'
+    mandate: 'local_optional'
     nullable: false
     tests:
       - test_type: missing 
 
   - name: 'BusinessSummary'
     type: 'string'
-    mandate: 'global_required'
+    mandate: 'local_required'
     nullable: false
     tests:
       - test_type: missing 

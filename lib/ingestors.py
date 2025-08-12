@@ -120,7 +120,7 @@ class IngestorCDC(Ingestor):
         try:
             df = self.spark.sql(query)
             merge = (self.delta_table.alias('old')
-                .merge(df.alias('new'), f'old.{self.id_field} = new.{self.id_field} and new.{self.ts_field} = old.{self.ts_field}')
+                .merge(df.alias('new'), f'old.{self.id_field} = new.{self.id_field} and new.{self.ts_field} >= old.{self.ts_field}')
                 .whenMatchedUpdateAll()
                 .whenNotMatchedInsertAll()
                 .execute())

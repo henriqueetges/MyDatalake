@@ -1,29 +1,74 @@
 schema:
   - name: 'symbol'
     type: 'string'
-    nullable: false 
+    nullable: false
+    mandate: 'global_required'
     key: true
+    tests:
+      - test_type: missing
+      - test_type: duplicated
+      - test_type: type_mismatch
 
   - name: 'date'
     type: 'string'
     nullable: false
+    mandate: 'global_required'
     date_predicate: true
+    tests: 
+      - test_type: missing
+      - test_type: duplicated
+      - test_type: type_mismatch
+      - test_type: outdated
+        kwargs:
+          threshold: 15 
   
   - name: 'high'
     type: 'string'
     nullable: false 
+    mandate: 'global_required'
+    tests:
+      - test_type: missing
+      - test_type: type_mismatch
+      - test_type: outside_of_rules
+        test_name: high < low
+        kwargs:
+          expression: high < low  
   
   - name: 'low'
     type: 'string'
     nullable: false 
+    mandate: 'global_required'
+    tests:
+      - test_type: missing
+      - test_type: type_mismatch
+      - test_type: outside_of_rules
+        test_name: low > high
+        kwargs:
+          expression: low > high
   
   - name: 'close'
     type: 'string'
     nullable: false 
+    mandate: 'global_required'
+    tests:
+      - test_type: missing
+      - test_type: type_mismatch
+      - test_type: outside_of_rules
+        test_name: close <= low
+        kwargs:
+          expression: close <= low
 
   - name: 'volume'
     type: 'string'
     nullable: false 
+    mandate: 'global_required'
+    tests:
+      - test_type: missing
+      - test_type: type_mismatch
+      - test_type: outside_of_rules
+        test_name: volumn too low (<10000)
+        kwargs:
+          expression: volume < 10000
 
   - name: 'loaded_at'
     type: 'string'
