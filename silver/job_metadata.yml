@@ -6,7 +6,7 @@ jobs:
       input_format: 'delta'
       catalog: 'silver'
       schema: 'brapi'
-    
+  
     - table_name: 'summary_profile'
       input_format: 'delta'
       catalog: 'silver'
@@ -24,6 +24,7 @@ jobs:
         input_format: 'delta'
         catalog: 'silver'
         schema: 'brapi'
+
     
 
     
