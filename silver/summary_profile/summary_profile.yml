@@ -2,45 +2,79 @@ schema:
   - name: 'symbol'
     type: 'string'
     nullable: false 
+    mandate: 'global_required'
     key: true
+    tests:
+      - test_type: missing
+      - test_type: duplicated
   
   - name: 'city'
     type: 'string'
-    nullable: false 
-
+    mandate: 'global_required'
+    nullable: false
+    tests:
+      - test_type: missing
+       
   - name: 'loaded_at'
     type: 'string'
+    mandate: 'global_required'
     nullable: false
     date_predicate: true
+    tests:
+      - test_type: missing
   
   - name: 'zip'
     type: 'string'
-    nullable: false 
+    mandate: 'global_required'
+    nullable: false
+    tests:
+      - test_type: missing 
   
   - name: 'state'
     type: 'string'
-    nullable: false 
+    mandate: 'global_required'
+    nullable: false
+    tests:
+      - test_type: missing 
   
   - name: 'industry'
     type: 'string'
-    nullable: false 
+    mandate: 'local_optional'
+    nullable: false
+    tests:
+      - test_type: missing 
 
   - name: 'country'
     type: 'string'
-    nullable: false 
+    mandate: 'global_required'
+    nullable: false
+    tests:
+      - test_type: missing  
 
   - name: 'sector'
     type: 'string'
+    mandate: 'local_required'
     nullable: false
+    tests:
+      - test_type: missing 
 
-  - name: 'address'
+  - name: 'address1'
     type: 'string'
+    mandate: 'local_optional'
     nullable: false
+    tests:
+      - test_type: missing 
 
   - name: 'address2'
     type: 'string'
+    mandate: 'local_optional'
     nullable: false
+    tests:
+      - test_type: missing 
 
   - name: 'BusinessSummary'
     type: 'string'
+    mandate: 'local_required'
     nullable: false
+    tests:
+      - test_type: missing 
