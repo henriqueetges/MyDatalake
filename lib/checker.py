@@ -5,11 +5,9 @@ from pyspark.sql import DataFrame as SparkDataFrame
 from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
 from .logging_utils import setup_logging
+from functools import reduce
 import time
-import logging
-import pyspark.sql.types as SType
-
-
+import re
 checker, file_handler = setup_logging('checker.log', 'checker')
 
 class Checker:
@@ -24,8 +22,15 @@ class Checker:
       self.table_name = self.table_instructions.get('table_name')
       self.schema = self.table_instructions.get('schema')
       self.catalog = self.table_instructions.get('catalog')
-      with open(self.metadata_path, 'r') as f:
-        self.table_config = yaml.safe_load(f)
+      try:
+        with open(self.metadata_path, 'r') as f:
+          self.table_config = yaml.safe_load(f)
+      except FileNotFoundError:
+        raise FileNotFoundError(f'Metadata file not found at path: {self.metadata_path}')
+      except yaml.YAMLError as e:
+        raise ValueError(f'Error parsing YAML file: {e}')
+        
+
 
 
     def _log_step(self, step: str, message: str) -> None:
@@ -60,13 +65,18 @@ class Checker:
       """
 
       self._log_step('test_fetch', 'Getting tests')
+      schema = self.table_config.get('schema', [])
+      if not isinstance(schema, list):
+        raise ValueError("Schema must be a list of dictionaries.")
+
       test_cols = []
+      key_cols = []
       self.df_key = None
 
-      for col in self.table_config.get('schema', []):
+      for col in schema:
         col_name = col.get('name')
-        if col.get('key') is True and self.df_key is None:
-          self.df_key = col_name
+        if col.get('key') is True:
+          key_cols.append(col_name)          
 
         for test in col.get('tests', []):
           test_cols.append({
@@ -77,15 +87,17 @@ class Checker:
               'test_name': test.get('test_name', ''),
               'kwargs': test.get('kwargs', {})
             })
+        self._log_step('test_fetch', f'{col_name} has {len(col.get("tests", []))} tests')  
 
-      if not self.df_key:
+      if not key_cols:
         raise ValueError("No key column found in schema.")
-
-      if self.df_key not in self.df.columns:
-        raise ValueError(f"Key column '{self.df_key}' not found in DataFrame.")
-
-      self.df = self.df.withColumn('df_key', F.col(self.df_key))
-
+      self.df_key = '_'.join(key_cols)
+      missing_keys = [c for c in key_cols if c not in self.df.columns]
+      if missing_keys:
+        raise ValueError(f"Key column not found in DataFrame.")
+      composite_key = F.concat_ws('_', *[F.col(c).cast('string') for c in key_cols])
+      self.df = self.df.withColumn('df_key', composite_key)
+      self._log_step('test_fetch', f'Key created using {self.df_key}')
       self._log_step('test_fetch', 'Getting tests finished')
       return test_cols
 
@@ -105,7 +117,7 @@ class Checker:
       mandate = kwargs.get('mandate', '')
       test_name= kwargs.get('test_name', '')
       results = self.df.select(
-        'df_key', 
+        F.col(self.df_key).alias('df_key'), 
         F.lit(test_type).alias('test_type'), 
         F.lit(mandate).alias('mandate'),
         F.lit(column_name).alias('column'),
@@ -125,12 +137,13 @@ class Checker:
         kwargs: dict
       """
       column_name = kwargs.get('column', '')
-      if not column_name:
-        raise ValueError(f'{column_name} not found')
       self._log_step('Tests', f'Checking {column_name} for nulls using {self.df_key}')
-      test = ((F.col(column_name).isNull()) | (F.col(column_name).cast('string') == '0.0'))
+      if not column_name:
+        raise ValueError(f'Column not found')
+      invalid_values = ['', '0.0']
+      test = F.col(column_name).isNull() | F.col(column_name).cast('string').isin(invalid_values)
       result = F.when(test, 'failed').otherwise(F.lit('passed'))
-      score = F.when(test, '0').otherwise(F.lit('1'))
+      score = F.when(test, F.lit(0)).otherwise(F.lit(1))
       self._log_step('Tests', f'Checking {column_name} for nulls finished')
       return self._build_result(result, score,**kwargs)
 
@@ -142,14 +155,14 @@ class Checker:
         kwargs: dict 
       """
       column_name = kwargs.get('column', '')
-      if not column_name:
-        raise ValueError(f'{column_name} not found')
       self._log_step('Tests', f'Checking {column_name} for duplicates')
-      window = Window.partitionBy(column_name).orderBy(F.lit(1))
+      if not column_name:
+        raise ValueError(f'Column not found')      
+      window = Window.partitionBy(column_name).orderBy(F.col(self.df_key))
       self.df = self.df.withColumn("row_number_window", F.row_number().over(window))
       test = (F.col("row_number_window") > 1)
       result = F.when(test, 'failed').otherwise(F.lit('passed'))
-      score = F.when(test, '0').otherwise(F.lit('1'))
+      score = F.when(test, F.lit(0)).otherwise(F.lit(1))
       result = self._build_result(result, score, **kwargs)
       self.df = self.df.drop("row_number_window")
       self._log_step('Tests', f'Checking {column_name} for duplicates finished')
@@ -164,16 +177,15 @@ class Checker:
 
       THIS NEEDS TO BE REFACTORED TO CHECK FOR VALUE IN RANGE 
       """
-      
-      column_name = kwargs.get('column', '')
-      if not column_name:
-        raise ValueError(f'{column_name} not found')
-      self._log_step('Tests', f'Checking {column_name} for timeliness')
       threshold = kwargs.get('kwargs', {}).get('threshold', 0)    
+      column_name = kwargs.get('column', '')
+      if not column_name or threshold is None:
+        raise ValueError(f'column or threshold not found in configs')
+      self._log_step('Tests', f'Checking {column_name} for timeliness')
       test = (F.col(column_name) < F.date_sub(F.current_date(), threshold))
       # change scoring here based on the degree of change to the expected date
       result = F.when(test, 'failed').otherwise(F.lit('passed'))
-      score = F.when(test, '0').otherwise(F.lit('1'))
+      score = F.when(test, F.lit(0)).otherwise(F.lit(1))
       self._log_step('Tests', f'Checking {column_name} for timeliness finished')  
       return self._build_result(result, score,**kwargs)
 
@@ -185,15 +197,14 @@ class Checker:
       Parameters:
         kwargs: dict
       """
-      
-      column_name = kwargs.get('column') 
-      if not column_name:
-        raise ValueError(f'{column_name} not found')      
       expression = kwargs.get('kwargs', {}).get('expression', {})
+      column_name = kwargs.get('column') 
+      if not column_name or expression is None:
+        raise ValueError(f'Mising column or expressin in configs')            
       self._log_step('Tests', f'Checking {column_name} for validity using {expression}')
-      test = (F.when(F.col(column_name).isNull(), F.lit(True)).otherwise(F.expr(expression)))
+      test = F.col(column_name).isNull() |~F.expr(expression)
       result = F.when(test, 'failed').otherwise(F.lit('passed'))
-      score = F.when(test, '0').otherwise(F.lit('1'))
+      score = F.when(test, F.lit(0)).otherwise(F.lit(1))
       self._log_step('Tests', f'Checking {column_name} for validity finished')
       return self._build_result(result, score,**kwargs)
       
@@ -205,15 +216,15 @@ class Checker:
       parameters:
         kwargs: dict
       """
-      
-      column_name = kwargs.get('column')      
-      if not column_name:
-        raise ValueError(f'{column_name} not found')
-      self._log_step('Tests', f'Checking {column_name} for unexpected values')
       expected_values = kwargs.get('kwargs',{}).get('expected_values', [])
-      test = ~(F.lower(F.trim(F.col(column_name))).isin([v.lower() for v in expected_values]))
+      column_name = kwargs.get('column')      
+      if not column_name or expected_values is None:
+        raise ValueError(f'column or expected values not found')
+      self._log_step('Tests', f'Checking {column_name} for unexpected values')
+      normalized_values = [v.lower() for v in expected_values]    
+      test = ~(F.lower(F.trim(F.col(column_name))).isin([normalized_values]))
       result = F.when(test, 'failed').otherwise(F.lit('passed'))
-      score = F.when(test, '0').otherwise(F.lit('1'))
+      score = F.when(test, F.lit(0)).otherwise(F.lit(1))
       self._log_step('Tests', f'Checking {column_name} for unexpected values finished')
       return self._build_result(result, score,**kwargs)
 
@@ -223,17 +234,20 @@ class Checker:
 
       Parameters:
         kwargs: dict
-      """
-      
-      column_name, pattern = kwargs.get('column'), kwargs.get('pattern')
-      if not column_name:
-        raise ValueError(f'{column_name} not found')
+      """      
+      column_name = kwargs.get('column')
+      pattern = kwargs.get('pattern')
+      if not column_name or pattern is None:
+        raise ValueError(f'column or pattern not found')
+      try: 
+        re.compile(pattern)
+      except re.error:
+        raise ValueError(f'pattern {pattern} is not a valid regular expression')
+
       self._log_step('Tests', f'Checking {column_name} for pattern {pattern}')
-      if column_name is None or pattern is None:
-        raise ValueError('Unespecified column or pattern')
-      test = (F.when(~F.col(column_name).rlike(pattern), True).otherwise(False))
+      test = ~F.col(column_name).rlike(pattern)
       result = F.when(test, 'failed').otherwise(F.lit('passed'))
-      score = F.when(test, '0').otherwise(F.lit('1'))
+      score = F.when(test, F.lit(0)).otherwise(F.lit(1))
       self._log_step('Tests', f'Checking {column_name} for pattern finished')
       return self._build_result(result, score,**kwargs)
 
@@ -245,17 +259,16 @@ class Checker:
       Parameters:
         kwargs: dict
       """
-      
-      column_name, expected_type = kwargs.get('column'), kwargs.get('type')
-      if not column_name:
-        raise ValueError(f'{column_name} not found')
+      column_name = kwargs.get('column')
+      expected_type = kwargs.get('type')
+      if not column_name or not expected_type:
+        raise ValueError(f'column or expected type not found')
+
       self._log_step('Tests', f'Checking {column_name} type consistency for {expected_type}')
-      if column_name is None or expected_type is None:
-        raise ValueError('Unespecified column or column type')
       casted = F.col(column_name).cast(expected_type)      
       test = casted.isNull() & F.col(column_name).isNotNull()  
       result = F.when(test, 'failed').otherwise(F.lit('passed'))
-      score = F.when(test, '0').otherwise(F.lit('1'))
+      score = F.when(test, F.lit(0)).otherwise(F.lit(1))
       self._log_step('Tests', f'Checking {column_name} for type consistency finished')
       return self._build_result(result, score,**kwargs)
 
@@ -281,17 +294,16 @@ class Checker:
       dfs = []
       tests = self.get_column_tests()
       for test_params in tests:
-        if test_params.get('test_type') not in expectation_funcs:
-          raise ValueError(f'Unsupported expectation type: {test_params.get("test_type")}')
+        test_type = test_params.get('test_type')
+        if test_type not in expectation_funcs:
+          raise ValueError(f'Unsupported expectation type: {test_type}')
         else:
             self._log_step('Perfoming Checks', 'Started running checks')
-            df = expectation_funcs[test_params.get('test_type')](**test_params)
+            df = expectation_funcs[test_type](**test_params)
             dfs.append(df)
             self._log_step('Perfoming Checks', 'Finished running checks')
       self._log_step('Aggregating results', 'Started')
-      final_df = dfs[0]
-      for df in dfs[1:] :        
-        final_df = final_df.unionByName(df)        
+      final_df = reduce(lambda df1, df2: df1.unionByName(df2), dfs)
       self._log_step('Aggregating results', 'Finished')
       checker.removeHandler(file_handler)
       file_handler.close()
