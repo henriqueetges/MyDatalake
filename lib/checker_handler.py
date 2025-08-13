@@ -1,4 +1,4 @@
-import logging
+import traceback
 import time
 import inspect
 from functools import reduce
@@ -6,6 +6,7 @@ from pyspark.sql import functions as F
 from pyspark.sql import DataFrame as SparkDataFrame
 from .checker import Checker
 from .logging_utils import setup_logging
+from delta.tables import DeltaTable
 
 checker_handler, file_handler = setup_logging('checker_handler.log', 'checker_handler')
 
@@ -13,6 +14,7 @@ class CheckerHandler:
     def __init__(self, spark_session, dfs: dict):
       self.spark = spark_session
       self.dfs = dfs
+      self.results = []
 
     def _log_step(self, step: str, message: str) -> None:
       """
@@ -46,8 +48,10 @@ class CheckerHandler:
         df
         metadata_path:
       """
-    
-      checker = Checker(self.spark, table_info)
+      try:
+        checker = Checker(self.spark, table_info)
+      except Exception as e:
+        checker_handler.error(f"Checks | {table_info.get('table_name')}: Failed to instantiate checker {e}")
       return checker.Annotate()
 
     def _select_standard_columns(self, df: SparkDataFrame, layer: str, table_name: str):
@@ -69,26 +73,41 @@ class CheckerHandler:
       table_name = table_info.get('table_name')
       layer = table_info.get('catalog')
       metadata_path = table_info.get('metadata_path')
+
       self._log_step("Metadata", f"Fetching metadata for {table_name}")
       self._log_step("Metadata", f"{table_name} metadata fetched")
       self._log_step("Checks", f"Checking {layer}.{table_name} using info from {metadata_path}")
       try:
           start = time.time()
           annotated_df = self._annotate_dataframe(table_info)
-          self._log_duration(f"Checks | {layer}.{table_name}", start)
-          return self._select_standard_columns(annotated_df, layer, table_name)
+          if annotated_df:
+            self._log_duration(f"Checks | {layer}.{table_name}", start)
+            standardized_df = self._select_standard_columns(annotated_df, layer, table_name)
+            self.results.append(standardized_df)
       except Exception as e:
-          checker_handler.error(f"Checks | {layer}.{table_name}: Failed to annotate {e}")
-          checker_handler.error(str(e))
-          return None
+        error_type = type(e).__name__
+        error_msg = str(e)
+        tb = traceback.format_exc()      
+        checker_handler.error({
+          'step': 'Checks',
+          'table': f'{layer}.{table_name}',
+          'error_type': error_type,
+          'error_msg': error_msg,
+          'traceback': tb
+        })
+          
+        return None
 
-    def _compile_results(self, results: list[SparkDataFrame]) -> SparkDataFrame:
+    def _compile_results(self) -> SparkDataFrame:
       """
       Union all the tables and their tests into a single dataframe
       """
       self._log_step("Compilation", "Compiling results")
       start = time.time()
-      final_df = reduce(lambda df1, df2: df1.unionByName(df2), results)
+      if not self.results:
+        checker_handler.error('No Results to compiled')
+        return None
+      final_df = reduce(lambda df1, df2: df1.unionByName(df2), self.results)
       final_df.createOrReplaceTempView('silver.checks.tempv_column_checks')
       self._log_duration("Compilation", start)
       return final_df
@@ -101,12 +120,21 @@ class CheckerHandler:
         df = df.withColumn("run_date", F.col("run_date").cast("date")) \
           .withColumn("check_score", F.col("check_score").cast("double"))
 
-        (df.write
-         .mode('overwrite')
-         .option('overwriteSchema', 'true')
-         .format('delta')
-         .saveAsTable('silver.checks.column_checks')
-        )
+        target_table = 'silver.checks.column_checks'
+        delta_table = DeltaTable.forName(self.spark, target_table)
+
+        delta_table.alias('target') \
+          .merge(
+            source=df.alias('source'),
+            condition="""
+              target.table_name = source.table_name 
+              AND target.column = source.column
+              AND target.test_type = source.test_type
+              AND target.layer = source.layer
+            """
+          ).whenMatchedUpdateAll() \
+          .whenNotMatchedInsertAll() \
+          .execute()
       except Exception as e:
         raise RuntimeError(f"Failed to save checks: {e}")
 
@@ -115,18 +143,13 @@ class CheckerHandler:
       """
       Main function that serves as a handle for processing tables, adding results into 
       the result list and compling results.
-      """
-      results = []
+      """ 
+      self.results = []     
       for table_info in self.dfs.values():
-        try:
-          result = self._process_table(table_info)
-          if result is not None:
-            results.append(result)
-        except Exception as e:
-          checker_handler.error(f'Compilation | Compilation failed because of {e}')
-          return None
+        self._process_table(table_info)
+      final_df = self._compile_results()
+      if final_df:
+        self._save_checks(final_df)
       checker_handler.removeHandler(file_handler)
       file_handler.close()
-      results = self._compile_results(results)
-      self._save_checks(results)
-      return results
+      return final_df
