@@ -91,12 +91,14 @@ class Checker:
 
       if not key_cols:
         raise ValueError("No key column found in schema.")
-      self.df_key = '_'.join(key_cols)
+   
       missing_keys = [c for c in key_cols if c not in self.df.columns]
       if missing_keys:
         raise ValueError(f"Key column not found in DataFrame.")
       composite_key = F.concat_ws('_', *[F.col(c).cast('string') for c in key_cols])
+      
       self.df = self.df.withColumn('df_key', composite_key)
+      self.df_key = 'df_key'
       self._log_step('test_fetch', f'Key created using {self.df_key}')
       self._log_step('test_fetch', 'Getting tests finished')
       return test_cols
@@ -117,7 +119,7 @@ class Checker:
       mandate = kwargs.get('mandate', '')
       test_name= kwargs.get('test_name', '')
       results = self.df.select(
-        F.col(self.df_key).alias('df_key'), 
+        F.col(str(self.df_key)).alias('df_key'), 
         F.lit(test_type).alias('test_type'), 
         F.lit(mandate).alias('mandate'),
         F.lit(column_name).alias('column'),
