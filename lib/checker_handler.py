@@ -166,9 +166,9 @@ class CheckerHandler:
         delta_table = DeltaTable.forName(self.spark, target_table)
         df = df.withColumn("run_date", F.col("run_date").cast("date")) \
           .withColumn("total_score", F.col("total_score").cast("double")) \
-          .withColumn("columns_checked", F.col("columns_checked").cast("int")) \
-          .withColumn("passing_cols", F.col("passing_cols").cast("int")) \
-          .withColumn("failing_cols", F.col("failing_cols").cast("int"))
+          .withColumn("columns_checked", F.col("columns_checked").cast("long")) \
+          .withColumn("passing_cols", F.col("passing_cols").cast("long")) \
+          .withColumn("failing_cols", F.col("failing_cols").cast("long"))
         
         if not self.spark.catalog.tableExists(target_table):
           (df.write
