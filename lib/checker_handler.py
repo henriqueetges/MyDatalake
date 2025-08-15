@@ -132,7 +132,7 @@ class CheckerHandler:
 
     def _aggregate_results(self) -> SparkDataFrame:
       """
-      Aggregates the results by test name, table name, test type and layer
+      Aggregates the results by test name, table name, test type, layer and mandate
       """
       self._log_step("Aggregation", "Aggregating results")       
       start = time.time()      
@@ -146,9 +146,9 @@ class CheckerHandler:
           run_date,
           mandate,
           AVG(check_score) AS total_score,
-          COUNT(column) AS columns_checked,
-          COUNT(CASE WHEN check_result = 'passed' THEN column END) AS passing_cols,
-          COUNT(CASE WHEN check_result <> 'passed' THEN column END) AS failing_cols
+          SUM(1) AS columns_checked,
+          SUM(CASE WHEN check_result = 'passed' THEN 1 ELSE 0 END) AS passing_cols,
+          SUM(CASE WHEN check_result = 'passed' THEN 0 ELSE 1 END) AS failing_cols
         FROM silver.checks.column_checks
         GROUP BY test_name, table_name, test_type, layer, run_date, mandate
       """)
@@ -207,6 +207,9 @@ class CheckerHandler:
       return final_df
     
     def execute(self):
+      """
+      Main method for the handler, performs the necessary steps to achieve scores
+      """
       start = time.time()
       self._log_step('Execution', 'Starting execution')
       self.run_checks()
