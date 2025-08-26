@@ -27,7 +27,7 @@ def setup_logging(log_file: str, logger_name: str, level=logging.INFO):
         level (int): Logging level (e.g., logging.INFO, logging.DEBUG).
     """
   
-    logs_dir = '/Workspace/Users/ike.etges@gmail.com/Datalake/logs'
+    logs_dir = './logs'
     os.makedirs(logs_dir, exist_ok=True)
     log_path = os.path.join(logs_dir, log_file)  
     logger = logging.getLogger(logger_name)
