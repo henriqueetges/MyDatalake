@@ -12,8 +12,8 @@ jobs:
       catalog: 'bronze'
       schema: 'brapi'
     
-  - name: 'bronze_cdc'
-    type: 'cdc'
+  - name: 'bronze_incremental'
+    type: 'incremental'
     tables:
       - table_name: 'tickers'
         input_format: 'json'

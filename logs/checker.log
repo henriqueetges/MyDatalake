@@ -3561,3 +3561,129 @@
 {"timestamp": "2025-08-15T19:59:27.293555+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
 {"timestamp": "2025-08-15T19:59:27.294862+00:00", "level": "INFO", "message": "{'step': 'Aggregating results', 'message': 'Started'}", "logger": "checker", "module": "checker"}
 {"timestamp": "2025-08-15T19:59:27.296615+00:00", "level": "INFO", "message": "{'step': 'Aggregating results', 'message': 'Finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:56.996091+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'Getting tests'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:56.998043+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'symbol has 3 tests'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:56.999900+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'date has 4 tests'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.001513+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'high has 3 tests'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.002310+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'low has 3 tests'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.003629+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'close has 3 tests'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.005990+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'volume has 3 tests'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.026062+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'loaded_at has 0 tests'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.741219+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'Key created using df_key'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.742292+00:00", "level": "INFO", "message": "{'step': 'test_fetch', 'message': 'Getting tests finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.752036+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.754188+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking symbol for nulls using df_key'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.755520+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking symbol for nulls finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.756175+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.757522+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.759124+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.759912+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.760992+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking symbol for duplicates'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.768450+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.770023+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.771375+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking symbol for duplicates finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.774048+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.775442+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.776513+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking symbol type consistency for string'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.777787+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking symbol for type consistency finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.779243+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.787905+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.806551+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.855511+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.859941+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking date for nulls using df_key'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.865577+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking date for nulls finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.871311+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.876764+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.878392+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.881159+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.882411+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking date for duplicates'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.884795+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.885950+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.886741+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking date for duplicates finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.887639+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.889683+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.890689+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking date type consistency for string'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.891784+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking date for type consistency finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.893580+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.894843+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.895569+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.896704+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.898288+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking date for timeliness'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.899938+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking date for timeliness finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.900714+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.903162+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.904380+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.905053+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.912273+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking high for nulls using df_key'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.932083+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking high for nulls finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.940732+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.959503+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.961319+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.961988+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.963101+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking high type consistency for string'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.964706+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking high for type consistency finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.966945+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.968520+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.969885+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.985461+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.991076+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking high for validity using high < low'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.993875+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking high for validity finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.995153+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:57.998035+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.001577+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.003126+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.012745+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking low for nulls using df_key'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.013875+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking low for nulls finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.015043+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.016260+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.017695+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.019277+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.021835+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking low type consistency for string'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.024704+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking low for type consistency finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.025815+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.027353+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.028430+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.029449+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.030392+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking low for validity using low > high'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.031950+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking low for validity finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.032909+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.034400+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.035944+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.036886+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.037993+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking close for nulls using df_key'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.039178+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking close for nulls finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.040239+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.041456+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.042683+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.043908+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.044964+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking close type consistency for string'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.046380+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking close for type consistency finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.047756+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.049240+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.050637+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.052160+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.053340+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking close for validity using close <= low'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.054480+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking close for validity finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.055416+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.056575+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.057855+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.058950+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.059951+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking volume for nulls using df_key'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.061537+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking volume for nulls finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.062672+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.063994+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.065123+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.066664+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.068206+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking volume type consistency for string'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.086251+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking volume for type consistency finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.089038+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.091640+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.093848+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.095458+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Started running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.096874+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking volume for validity using volume < 10000'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.099219+00:00", "level": "INFO", "message": "{'step': 'Tests', 'message': 'Checking volume for validity finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.102608+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.106653+00:00", "level": "INFO", "message": "{'step': 'Resultset', 'message': 'Building resultset finished'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.108657+00:00", "level": "INFO", "message": "{'step': 'Perfoming Checks', 'message': 'Finished running checks'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.109969+00:00", "level": "INFO", "message": "{'step': 'Aggregating results', 'message': 'Started'}", "logger": "checker", "module": "checker"}
+{"timestamp": "2025-08-26T15:51:58.111445+00:00", "level": "INFO", "message": "{'step': 'Aggregating results', 'message': 'Finished'}", "logger": "checker", "module": "checker"}

@@ -12,8 +12,8 @@ jobs:
       catalog: 'silver'
       schema: 'brapi'
 
-  - name: 'silver_cdc'
-    type: 'cdc'
+  - name: 'silver_incremental'
+    type: 'incremental'
     tables:
       - table_name: 'prices'
         input_format: 'delta'
