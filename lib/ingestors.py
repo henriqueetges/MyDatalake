@@ -92,6 +92,7 @@ class Ingestor:
             (df.write
                 .format('delta')
                 .mode('overwrite')
+                .option('overwriteSchema', 'true')
                 .saveAsTable(f'{self.catalog}.{self.schema}.{self.table_name}')
             )
         except Exception as e:
@@ -104,7 +105,7 @@ class Ingestor:
         print(f'Saving {self.table_name} into {self.catalog}.{self.schema}.{self.table_name}')
         return self.save(df)
 
-class IngestorCDC(Ingestor):
+class IngestorIncremental(Ingestor):
     def __init__(self, spark, catalog, schema, table_name, input_format):
         super().__init__(spark, catalog, schema, table_name , input_format)
         self._set_delta()
@@ -120,7 +121,7 @@ class IngestorCDC(Ingestor):
         try:
             df = self.spark.sql(query)
             merge = (self.delta_table.alias('old')
-                .merge(df.alias('new'), f'old.{self.id_field} = new.{self.id_field} and new.{self.ts_field} >= old.{self.ts_field}')
+                .merge(df.alias('new'), f'old.{self.id_field} = new.{self.id_field} and new.{self.ts_field} = old.{self.ts_field}')    
                 .whenMatchedUpdateAll()
                 .whenNotMatchedInsertAll()
                 .execute())

@@ -8,9 +8,9 @@ def parse_yaml(file_path):
         print(f"File not found: {file_path}")
 
 
-def find_job(job_type, job_name):
-    job_dir = job_name.split('_')[0]
-    file_path = f'{job_dir}/job_metadata.yml'
+def find_job(dir, job_type, job_name):
+    
+    file_path = f'{dir}/job_metadata.yml'
 
     def _find_job(data, job_name, job_type):
         try:
