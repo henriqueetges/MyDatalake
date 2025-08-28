@@ -116,12 +116,12 @@ class CheckerHandler:
     def _save_checks(self, df: SparkDataFrame):
       self._log_step('Saving', 'Truncating results')
       try:
-        self.spark.sql("TRUNCATE TABLE silver.checks.column_checks")
+        self.spark.sql("TRUNCATE TABLE bronze.checks.column_checks")
         
         df = df.withColumn("run_date", F.col("run_date").cast("date")) \
           .withColumn("check_score", F.col("check_score").cast("double"))
 
-        target_table = 'silver.checks.column_checks'        
+        target_table = 'bronze.checks.column_checks'        
         self._log_step('Saving', 'Saving results')
         (df.write
           .format('delta')
@@ -130,68 +130,68 @@ class CheckerHandler:
       except Exception as e:
         raise RuntimeError(f"Failed to save checks: {e}")
 
-    def _aggregate_results(self) -> SparkDataFrame:
-      """
-      Aggregates the results by test name, table name, test type, layer and mandate
-      """
-      self._log_step("Aggregation", "Aggregating results")       
-      start = time.time()      
-      aggregated_df = self.spark.sql(
-        """
-        SELECT
-          test_name,
-          table_name,
-          test_type,
-          layer,
-          run_date,
-          mandate,
-          AVG(check_score) AS total_score,
-          SUM(1) AS columns_checked,
-          SUM(CASE WHEN check_result = 'passed' THEN 1 ELSE 0 END) AS passing_cols,
-          SUM(CASE WHEN check_result = 'passed' THEN 0 ELSE 1 END) AS failing_cols
-        FROM silver.checks.column_checks
-        GROUP BY test_name, table_name, test_type, layer, run_date, mandate
-      """)
-      self._log_duration("Aggregation", start)      
-      return aggregated_df
+    # def _aggregate_results(self) -> SparkDataFrame:
+    #   """
+    #   Aggregates the results by test name, table name, test type, layer and mandate
+    #   """
+    #   self._log_step("Aggregation", "Aggregating results")       
+    #   start = time.time()      
+    #   aggregated_df = self.spark.sql(
+    #     """
+    #     SELECT
+    #       test_name,
+    #       table_name,
+    #       test_type,
+    #       layer,
+    #       run_date,
+    #       mandate,
+    #       AVG(check_score) AS total_score,
+    #       SUM(1) AS columns_checked,
+    #       SUM(CASE WHEN check_result = 'passed' THEN 1 ELSE 0 END) AS passing_cols,
+    #       SUM(CASE WHEN check_result = 'passed' THEN 0 ELSE 1 END) AS failing_cols
+    #     FROM bronze.checks.column_checks
+    #     GROUP BY test_name, table_name, test_type, layer, run_date, mandate
+    #   """)
+    #   self._log_duration("Aggregation", start)      
+    #   return aggregated_df
     
-    def _upsert_aggregated_results(self, df: SparkDataFrame):
-      """
-      Upserts the aggregated results into the silver.checks.aggregated_checks table
-      """
-      self._log_step("Upsert", "Upserting aggregated results")
-      start = time.time() 
-      try:
-        target_table = 'silver.checks.aggregated_checks'
-        delta_table = DeltaTable.forName(self.spark, target_table)
-        df = df.withColumn("run_date", F.col("run_date").cast("date")) \
-          .withColumn("total_score", F.col("total_score").cast("double")) \
-          .withColumn("columns_checked", F.col("columns_checked").cast("long")) \
-          .withColumn("passing_cols", F.col("passing_cols").cast("long")) \
-          .withColumn("failing_cols", F.col("failing_cols").cast("long"))
+    # def _upsert_aggregated_results(self, df: SparkDataFrame):
+    #   """
+    #   Upserts the aggregated results into the silver.checks.aggregated_checks table
+    #   """
+    #   self._log_step("Upsert", "Upserting aggregated results")
+    #   start = time.time() 
+    #   try:
+    #     target_table = 'silver.checks.aggregated_checks'
+    #     delta_table = DeltaTable.forName(self.spark, target_table)
+    #     df = df.withColumn("run_date", F.col("run_date").cast("date")) \
+    #       .withColumn("total_score", F.col("total_score").cast("double")) \
+    #       .withColumn("columns_checked", F.col("columns_checked").cast("long")) \
+    #       .withColumn("passing_cols", F.col("passing_cols").cast("long")) \
+    #       .withColumn("failing_cols", F.col("failing_cols").cast("long"))
         
-        if not self.spark.catalog.tableExists(target_table):
-          (df.write
-            .format('delta')
-            .mode('overwrite')
-            .saveAsTable(target_table))
+    #     if not self.spark.catalog.tableExists(target_table):
+    #       (df.write
+    #         .format('delta')
+    #         .mode('overwrite')
+    #         .saveAsTable(target_table))
         
-        delta_table.alias('target').merge(
-          source=df.alias('source'),
-          condition="""
-          target.test_name = source.test_name
-          AND target.table_name = source.table_name
-          AND target.test_type = source.test_type
-          AND target.layer = source.layer
-          AND target.run_date = source.run_date 
-          AND target.mandate = source.mandate
-          """)\
-          .whenMatchedUpdateAll()\
-          .whenNotMatchedInsertAll()\
-          .execute()
-        self._log_duration('Upsert', start)
-      except Exception as e:
-        raise RuntimeError(f"Failed to upsert aggregated results: {e}")
+    #     delta_table.alias('target').merge(
+    #       source=df.alias('source'),
+    #       condition="""
+    #       target.test_name = source.test_name
+    #       AND target.table_name = source.table_name
+    #       AND target.test_type = source.test_type
+    #       AND target.layer = source.layer
+    #       AND target.run_date = source.run_date 
+    #       AND target.mandate = source.mandate
+    #       """)\
+    #       .whenMatchedUpdateAll()\
+    #       .whenNotMatchedInsertAll()\
+    #       .execute()
+    #     self._log_duration('Upsert', start)
+    #   except Exception as e:
+    #     raise RuntimeError(f"Failed to upsert aggregated results: {e}")
 
     def run_checks(self):
       """
@@ -214,8 +214,8 @@ class CheckerHandler:
       self._log_step('Execution', 'Starting execution')
       self.run_checks()
       self._log_step('Execution', 'Aggregating results')
-      df = self._aggregate_results()
-      self._upsert_aggregated_results(df)
+      # df = self._aggregate_results()
+      # self._upsert_aggregated_results(df)
       self._log_duration('Execution', start)
       checker_handler.removeHandler(file_handler)
       file_handler.close()

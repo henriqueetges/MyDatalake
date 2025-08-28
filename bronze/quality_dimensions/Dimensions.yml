@@ -1,0 +1,37 @@
+dimensions:
+  - name: Completeness
+    threshold: 0.80
+    baseline: 0.85
+    weight: 0.35
+    tests:
+      - missing
+
+  - name: Validity
+    threshold: 0.80
+    baseline: 0.87
+    weight: 0.25
+    tests:
+      - outside_of_rules
+      - not_in_list
+      - pattern_mismatch
+  
+  - name: Timeliness
+    threshold: 0.80
+    baseline: 0.90
+    weight: 0.2
+    tests:
+      - outdated
+
+  - name: Consistency
+    threshold: 0.85
+    baseline: 0.92
+    weight: 0.1
+    tests:
+      - type_mismatch
+  
+  - name: Uniqueness
+    threshold: 0.9
+    baseline: 0.95
+    weight: 0.1
+    tests:
+      - duplicated
