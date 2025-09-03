@@ -1,6 +1,7 @@
 CREATE MATERIALIZED VIEW gold.checks.column_checks AS
 SELECT 
-  layer
+uuid() AS test_key
+  , layer
   , table_name AS dataset
   , df_key AS dataset_key
   , test_type
