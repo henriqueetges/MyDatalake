@@ -145,12 +145,13 @@ class CheckerHandler:
           layer,
           run_date,
           mandate,
+          `column`,
           AVG(check_score) AS total_score,
-          SUM(1) AS columns_checked,
-          SUM(CASE WHEN check_result = 'passed' THEN 1 ELSE 0 END) AS passing_cols,
-          SUM(CASE WHEN check_result = 'passed' THEN 0 ELSE 1 END) AS failing_cols
+          SUM(1) AS rows_checked,
+          SUM(CASE WHEN check_result = 'passed' THEN 1 ELSE 0 END) AS passing_rows,
+          SUM(CASE WHEN check_result = 'passed' THEN 0 ELSE 1 END) AS failing_rows
         FROM bronze.checks.column_checks
-        GROUP BY test_name, table_name, test_type, layer, run_date, mandate
+        GROUP BY test_name, table_name, test_type, layer, run_date, mandate, `column`
       """)
       self._log_duration("Aggregation", start)      
       return aggregated_df
@@ -166,9 +167,11 @@ class CheckerHandler:
         delta_table = DeltaTable.forName(self.spark, target_table)
         df = df.withColumn("run_date", F.col("run_date").cast("date")) \
           .withColumn("total_score", F.col("total_score").cast("double")) \
-          .withColumn("columns_checked", F.col("columns_checked").cast("long")) \
-          .withColumn("passing_cols", F.col("passing_cols").cast("long")) \
-          .withColumn("failing_cols", F.col("failing_cols").cast("long"))
+          .withColumn("mandate", F.col("mandate").cast("string")) \
+          .withColumn("column", F.col("column").cast('string')) \
+          .withColumn("rows_checked", F.col("rows_checked").cast("long")) \
+          .withColumn("passing_rows", F.col("passing_rows").cast("long")) \
+          .withColumn("failing_rows", F.col("failing_rows").cast("long"))
         
         if not self.spark.catalog.tableExists(target_table):
           (df.write
@@ -180,11 +183,12 @@ class CheckerHandler:
           source=df.alias('source'),
           condition="""
           target.test_name = source.test_name
+          AND target.column = source.column
           AND target.table_name = source.table_name
           AND target.test_type = source.test_type
           AND target.layer = source.layer
-          AND target.run_date = source.run_date 
           AND target.mandate = source.mandate
+          AND target.run_date = source.run_date
           """)\
           .whenMatchedUpdateAll()\
           .whenNotMatchedInsertAll()\

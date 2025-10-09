@@ -22,6 +22,10 @@ schema:
     date_predicate: true
     tests:
       - test_type: missing
+      - test_type: outdated
+        kwargs:
+          threshold: 15
+
   
   - name: 'zip'
     type: 'string'

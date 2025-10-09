@@ -6,6 +6,7 @@ current_timestamp() AS ingest_ds
 , layer
 , table_name
 , mandate
+, `column` as column_tested
 , run_date
 , total_score
 , rows_checked

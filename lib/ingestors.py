@@ -14,6 +14,7 @@ class Ingestor:
         self.input_format = input_format
         self.path = f'/Volumes/raw/{schema}/{self.table_name}'
         self.query_path = f'./{self.table_name}/{self.table_name}.sql'
+        self.yml_path = f'{self.table_name}/{self.table_name}.yml'
     
     def _open_query(self):
         try:
@@ -26,7 +27,7 @@ class Ingestor:
 
     def _open_yml(self):
         try:
-            with open(f'{self.table_name}/{self.table_name}.yml', 'r') as f:
+            with open(self.yml_path, 'r') as f:
                 schema_yml = yaml.safe_load(f)
                 return schema_yml.get('schema', [])
         except Exception as e:
